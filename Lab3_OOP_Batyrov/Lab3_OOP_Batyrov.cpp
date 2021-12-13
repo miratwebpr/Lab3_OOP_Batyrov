@@ -22,6 +22,7 @@ protected:
 	Node<T>*first;
 	Node<T>*last;
 	int count;
+	Node<T>*iterator;
 public:
     Storage()
     {
@@ -113,6 +114,42 @@ public:
 		}
 		
 	}
+	class Iterator
+	{
+	private:
+		Node<T>* first;
+	public:
+		Iterator(Node<T>* first)
+		{
+			this->first = first;
+		}
+		Iterator operator++(int)
+		{
+			Iterator itr = *this;
+			first = first->next;
+			return itr;
+		}
+		T& operator*()
+		{
+			return first->Obj;
+		}
+		bool operator==(Iterator const comp) const
+		{
+			return first == comp.first;
+		}
+		bool operator!=(Iterator const comp) const
+		{
+			return !(first == comp.first);
+		}
+	};
+	Iterator begin()
+	{
+		return Iterator(first);
+	}
+	Iterator end()
+	{
+		return Iterator(last->next);
+	}
 };
 
 class Point
@@ -190,11 +227,14 @@ int main()
 	MyStorage.pushFront(p1);
 	MyStorage.pushBack(p2);
 	MyStorage.pushBack(p3);
-	for (int i = 0; i < MyStorage.getCount(); i++)
+
+
+	Storage<Point*>::Iterator i = MyStorage.begin();
+	for (i; i != MyStorage.end(); i++)
 	{
 		try
 		{
-			Point* p4 = MyStorage.getObject(i);
+			Point* p4 = *i;
 			printf("%d\n", p4->x);
 		}
 		catch (int t)
@@ -202,27 +242,6 @@ int main()
 			if (t == 0) printf("Error: index is bigger than size of the storage");
 		}
 	}
-	try
-	{
-		Point* p4 = MyStorage.getObjectAndDel(0);
-	}
-	catch (int t)
-	{
-		if (t == 0) printf("Error: index is bigger than size of the storage or equal");
-	}
-	for (int i = 0; i < MyStorage.getCount(); i++)
-	{
-		try
-		{
-			Point* p4 = MyStorage.getObject(i);
-			printf("%d\n", p4->x);
-		}
-		catch (int t)
-		{
-			if (t == 0) printf("Error: index is bigger than size of the storage");
-		}
-	}
-	if(MyStorage.getCount() == 0) printf("No objects");
 }
 /*
 Point* p5 = new Point(1, 32);
