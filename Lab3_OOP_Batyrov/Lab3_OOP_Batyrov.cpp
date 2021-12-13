@@ -79,7 +79,39 @@ public:
 		{
 			current = current->next;
 		}
-		return current->Obj;
+		if (count == 1)
+		{
+			count = 0;
+			first = NULL;
+			last = NULL;
+			return current->Obj;
+		}
+		if (current == first)
+		{
+			Node<T>* AftCurrent = current->next;
+			AftCurrent->prev = NULL;
+			first = AftCurrent;
+			count--;
+			return current->Obj;
+		}
+		else if (current == last)
+		{
+			Node<T>* BefCurrent = current->prev;
+			BefCurrent->next = NULL;
+			last = BefCurrent;
+			count--;
+			return current->Obj;
+		}
+		else
+		{
+			Node<T>* BefCurrent = current->prev;
+			Node<T>* AftCurrent = current->next;
+			BefCurrent->next = AftCurrent;
+			AftCurrent->prev = BefCurrent;
+			count--;
+			return current->Obj;
+		}
+		
 	}
 };
 
@@ -153,13 +185,12 @@ int main()
 {
 	Storage <Point*> MyStorage;
 	Point *p1 = new Point(3, 19);
-	Point* p2 = new Point(12, 32);
-	Point* p3 = new Point(123, 125);
-	MyStorage.pushBack(p1);
+	Point* p2 = new Point(1, 32);
+	Point* p3 = new Point(2, 125);
+	MyStorage.pushFront(p1);
 	MyStorage.pushBack(p2);
-	MyStorage.pushFront(p3);
-	int count = MyStorage.getCount();
-	for (int i = 0; i < count; i++)
+	MyStorage.pushBack(p3);
+	for (int i = 0; i < MyStorage.getCount(); i++)
 	{
 		try
 		{
@@ -171,12 +202,15 @@ int main()
 			if (t == 0) printf("Error: index is bigger than size of the storage");
 		}
 	}
-	Point* p5 = new Point(1, 32);
-	Point* p6 = new Point(2, 125);
-	MyStorage.pushFront(p5);
-	MyStorage.pushBack(p6);
-	count = MyStorage.getCount();
-	for (int i = 0; i < count; i++)
+	try
+	{
+		Point* p4 = MyStorage.getObjectAndDel(0);
+	}
+	catch (int t)
+	{
+		if (t == 0) printf("Error: index is bigger than size of the storage or equal");
+	}
+	for (int i = 0; i < MyStorage.getCount(); i++)
 	{
 		try
 		{
@@ -185,8 +219,26 @@ int main()
 		}
 		catch (int t)
 		{
-			if(t == 0) printf("Error: index is bigger than size of the storage");
+			if (t == 0) printf("Error: index is bigger than size of the storage");
 		}
 	}
-	
+	if(MyStorage.getCount() == 0) printf("No objects");
 }
+/*
+Point* p5 = new Point(1, 32);
+Point* p6 = new Point(2, 125);
+MyStorage.pushFront(p5);
+MyStorage.pushBack(p6);
+for (int i = 0; i < MyStorage.getCount(); i++)
+{
+	try
+	{
+		Point* p4 = MyStorage.getObject(i);
+		printf("%d\n", p4->x);
+	}
+	catch (int t)
+	{
+		if (t == 0) printf("Error: index is bigger than size of the storage");
+	}
+}
+*/
