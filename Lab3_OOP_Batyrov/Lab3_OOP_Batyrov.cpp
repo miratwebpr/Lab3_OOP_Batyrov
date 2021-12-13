@@ -2,46 +2,62 @@
 
 #include "stdio.h"
 #include <conio.h>
+//Первым делом в начало
+template<class T>class Storage;
 
-template<typename Point>
+template<class T>
+class Node
+{
+	friend class Storage<T>;
+private:
+	Node* next;
+	Node* prev;
+	T Obj;
+};
+template<class T>
 class Storage
 {
 protected:
-	node* first;
-	node* last;
-	int cnt;
-
+	Node<T>*first;
+	Node<T>*last;
+	int count;
+public:
     Storage()
     {
-        myObject = null;
+		first = NULL;
+		last = NULL;
+		count = 0;
     }
-    Storage(Point Object)
-    {
-        
-    }
-};
-template<typename Point>
-class node
-{
-private:
-	node* next;
-	node* prev;
-	Point* Obj;
-public:
-	node(Point* Obj)
+	int getCount()
 	{
-		this->Obj = Obj;
-		prev = Obj - 1;
-		next = Obj + 1;
+		return count;
 	}
-	void add(Point* Obj)
+	void push_back(T newObj)
 	{
-		node(*Obj);
-		next++;
-		prev++;
+		Node<T>* newNode = new Node<T>();//ff
+		newNode->Obj = newObj;//ff
+		newNode->next = NULL;//ff
+		newNode->prev = last;//ff
+		if(count != 0) last->next = newNode;
+		else first = newNode;//ff
+		last = newNode;//ff
+		count++;//ff
 	}
-	friend class Storage;
+	T getObject(int index)
+	{
+		if (index < 0 || index >= count)
+		{
+			throw 0;
+		}
+		Node<T>*current = first;
+		for (int i = 0; i < index; i++)
+		{
+			current = current->next;
+		}
+		return current->Obj;
+	}
 };
+
 class Point
 {
 public:
@@ -78,6 +94,22 @@ public:
 using namespace std;
 int main()
 {
-	Storage <node<Point*>>;
-	Point *p1 = new Point();
+	Storage <Point*> MyStorage;
+	Point *p1 = new Point(3, 19);
+	Point* p2 = new Point(12, 32);
+	Point* p3 = new Point(123, 125);
+	
+	MyStorage.push_back(p1);
+	MyStorage.push_back(p2);
+	MyStorage.push_back(p3);
+
+	int count = MyStorage.getCount();
+	printf("%d\n", count);
+
+	for (int i = 0; i < count; i++)
+	{
+		Point* p4 = MyStorage.getObject(i);
+		printf("%d\n", p4->x);
+	}
+	
 }
