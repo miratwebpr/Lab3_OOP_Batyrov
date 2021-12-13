@@ -14,6 +14,7 @@ private:
 	Node* prev;
 	T Obj;
 };
+
 template<class T>
 class Storage
 {
@@ -32,16 +33,27 @@ public:
 	{
 		return count;
 	}
-	void push_back(T newObj)
+	void pushBack(T newObj)
 	{
-		Node<T>* newNode = new Node<T>();//ff
-		newNode->Obj = newObj;//ff
-		newNode->next = NULL;//ff
-		newNode->prev = last;//ff
+		Node<T>* newNode = new Node<T>();
+		newNode->Obj = newObj;
+		newNode->next = NULL;
+		newNode->prev = last;
 		if(count != 0) last->next = newNode;
-		else first = newNode;//ff
-		last = newNode;//ff
-		count++;//ff
+		else first = newNode;
+		last = newNode;
+		count++;
+	}
+	void pushFront(T newObj)
+	{
+		Node<T>* newNode = new Node<T>();
+		newNode->Obj = newObj;
+		newNode->next = first;
+		newNode->prev = NULL;
+		if (count != 0) first->prev = newNode;
+		else last = newNode;
+		first = newNode;
+		count++;
 	}
 	T getObject(int index)
 	{
@@ -50,6 +62,19 @@ public:
 			throw 0;
 		}
 		Node<T>*current = first;
+		for (int i = 0; i < index; i++)
+		{
+			current = current->next;
+		}
+		return current->Obj;
+	}
+	T getObjectAndDel(int index)
+	{
+		if (index < 0 || index >= count)
+		{
+			throw 0;
+		}
+		Node<T>* current = first;
 		for (int i = 0; i < index; i++)
 		{
 			current = current->next;
@@ -91,6 +116,38 @@ public:
 		y = y + dx;
 	}
 };
+class ColoredPoint :public Point
+{
+protected:
+	int color;
+public:
+	ColoredPoint() : Point()
+	{
+		printf("ColoredPoint()\n");
+		color = 0;
+	}
+	ColoredPoint(int x, int y, int color) : Point(x, y)
+	{
+		printf("ColoredPoint(int x, int y, int color)\n");
+		this->color = color;
+	}
+	ColoredPoint(const ColoredPoint& p)
+	{
+		printf("ColoredPoint(const ColoredPoint &cp)\n");
+		color = p.color;
+		x = p.x;
+		y = p.y;
+	}
+	~ColoredPoint()
+	{
+		printf("%d, %d color = %d\n", x, y, color);
+		printf("~ColoredPoint()\n");
+	}
+	void change_color(int new_color)
+	{
+		color = new_color;
+	}
+};
 using namespace std;
 int main()
 {
@@ -98,18 +155,38 @@ int main()
 	Point *p1 = new Point(3, 19);
 	Point* p2 = new Point(12, 32);
 	Point* p3 = new Point(123, 125);
-	
-	MyStorage.push_back(p1);
-	MyStorage.push_back(p2);
-	MyStorage.push_back(p3);
-
+	MyStorage.pushBack(p1);
+	MyStorage.pushBack(p2);
+	MyStorage.pushFront(p3);
 	int count = MyStorage.getCount();
-	printf("%d\n", count);
-
 	for (int i = 0; i < count; i++)
 	{
-		Point* p4 = MyStorage.getObject(i);
-		printf("%d\n", p4->x);
+		try
+		{
+			Point* p4 = MyStorage.getObject(i);
+			printf("%d\n", p4->x);
+		}
+		catch (int t)
+		{
+			if (t == 0) printf("Error: index is bigger than size of the storage");
+		}
+	}
+	Point* p5 = new Point(1, 32);
+	Point* p6 = new Point(2, 125);
+	MyStorage.pushFront(p5);
+	MyStorage.pushBack(p6);
+	count = MyStorage.getCount();
+	for (int i = 0; i < count; i++)
+	{
+		try
+		{
+			Point* p4 = MyStorage.getObject(i);
+			printf("%d\n", p4->x);
+		}
+		catch (int t)
+		{
+			if(t == 0) printf("Error: index is bigger than size of the storage");
+		}
 	}
 	
 }
