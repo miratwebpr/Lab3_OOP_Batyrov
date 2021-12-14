@@ -239,6 +239,7 @@ public:
 using namespace std;
 int main()
 {
+	clock_t time_T = clock();
 	srand(time(NULL));
 	Storage <Point*> MyStorage;
 	int actAmount = 0;
@@ -326,7 +327,7 @@ int main()
 					try
 					{
 						Point* p4 = *iter;
-						printf("Getting all elements of Storage: j = %d, *iter->x = %d\n\n", j, p4->x);
+						printf("Getting all elements of Storage(reverse): j = %d, *iter->x = %d\n\n", j, p4->x);
 						j++;
 					}
 					catch (int t)
@@ -339,4 +340,7 @@ int main()
 			
 		}
 	}
+	time_T = clock() - time_T;
+
+	printf("Time execution of program: %lf", (double)time_T / CLOCKS_PER_SEC);
 }
